@@ -8,6 +8,7 @@ class VaadinApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

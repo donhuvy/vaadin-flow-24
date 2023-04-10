@@ -43,29 +43,24 @@ public class VaadinApplication implements AppShellConfigurator {
 class ChatView extends VerticalLayout {
 
     ChatView(ChatService service) {
-
         var messageList = new MessageList();
         var textInput = new MessageInput();
-
         setSizeFull();
         add(messageList, textInput);
         expand(messageList);
         textInput.setWidthFull();
-
         service.join().subscribe(message -> {
             var nl = new ArrayList<>(messageList.getItems());
             nl.add(new MessageListItem(message.text(), message.time(), message.username()));
             getUI().ifPresent(ui -> ui.access((Command) () -> messageList.setItems(nl)));
         });
         textInput.addSubmitListener(event -> service.add(event.getValue()));
-
     }
 
 }
 
 @Route("login")
 class LoginView extends VerticalLayout {
-
     LoginView() {
         var form = new LoginForm();
         form.setAction("login");
@@ -96,15 +91,14 @@ class SecurityConfiguration extends VaadinWebSecurity {
 
 
 record Message(String username, String text, Instant time) {
+	
 }
 
 @Service
 class ChatService {
 
     private final Sinks.Many<Message> messages = Sinks.many().multicast().directBestEffort();
-
     private final Flux<Message> messagesFlux = messages.asFlux();
-
     private final AuthenticationContext ctx;
 
     ChatService(AuthenticationContext ctx) {
